@@ -18,7 +18,7 @@ async fn main() -> anyhow::Result<()> {
 
     // Printing the ASCII art
     const ASCII: &str  = include_str!("../ascii.txt");
-    println!("\x1b[38;5;203m{}\x1b[0m", ASCII);
+    println!("\n\x1b[38;5;203m{}\x1b[0m\n", ASCII);
 
     debug!("Running in DEBUG mode..");
 
