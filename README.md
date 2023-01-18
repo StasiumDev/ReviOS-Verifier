@@ -1,15 +1,11 @@
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png"/></a>
-This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND 4.0 International License</a>.
-
 
 # A simple CLI Tool to Verify ReviOS ISO's
+[![GitHub License](https://img.shields.io/static/v1?label=LICENSE&message=CC%20BY-NC-ND&color=188af5&style=for-the-badge&logo=creativecommons&logoColor=fff)](http://creativecommons.org/licenses/by-nc-nd/4.0/)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/StasiumDev/ReviOS-Verifier/main.yml?logo=github&style=for-the-badge)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/StasiumDev/ReviOS-Verifier?style=for-the-badge&logo=rust&label=Version)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/StasiumDev/ReviOS-Verifier?style=for-the-badge&logo=rust&label=Version)](https://github.com/StasiumDev/ReviOS-Verifier/releases)
 ![GitHub top language](https://img.shields.io/github/languages/top/StasiumDev/ReviOS-Verifier?style=for-the-badge&logo=rust)
-![GitHub](https://img.shields.io/github/license/StasiumDev/ReviOS-Verifier?style=for-the-badge&logo=gnu)
 ![GitHub All Releases](https://img.shields.io/github/downloads/StasiumDev/ReviOS-Verifier/total?style=for-the-badge&logo=gnu)
-    
-
+ 
 ### How to Use:
 
 Drag and drop an ISO on top of the executable and let it run.
