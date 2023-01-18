@@ -27,7 +27,6 @@ async fn main() -> anyhow::Result<()> {
 
     // Iterating over all provided files
     for path in std::env::args().skip(1) {
-
         // Opening the file in read-only mode
         let mut file = std::fs::File::open(&path)?;
 
