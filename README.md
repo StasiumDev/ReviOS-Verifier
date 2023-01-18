@@ -2,9 +2,9 @@
 # A simple CLI Tool to Verify ReviOS ISO's
 [![GitHub License](https://img.shields.io/static/v1?label=LICENSE&message=CC%20BY-NC-ND&color=188af5&style=for-the-badge&logo=creativecommons&logoColor=fff)](http://creativecommons.org/licenses/by-nc-nd/4.0/)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/StasiumDev/ReviOS-Verifier/main.yml?logo=github&style=for-the-badge)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/StasiumDev/ReviOS-Verifier?style=for-the-badge&logo=rust&label=Version)](https://github.com/StasiumDev/ReviOS-Verifier/releases)
-![GitHub top language](https://img.shields.io/github/languages/top/StasiumDev/ReviOS-Verifier?style=for-the-badge&logo=rust)
-![GitHub All Releases](https://img.shields.io/github/downloads/StasiumDev/ReviOS-Verifier/total?style=for-the-badge&logo=gnu)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/StasiumDev/ReviOS-Verifier?style=for-the-badge&logo=rust&label=Version&color=188af5)](https://github.com/StasiumDev/ReviOS-Verifier/releases)
+![GitHub top language](https://img.shields.io/github/languages/top/StasiumDev/ReviOS-Verifier?style=for-the-badge&logo=rust&color=188af5)
+![GitHub All Releases](https://img.shields.io/github/downloads/StasiumDev/ReviOS-Verifier/total?style=for-the-badge&logo=Google%20Chrome&color=188af5)
  
 ### How to Use:
 
