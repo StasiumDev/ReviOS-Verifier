@@ -1,10 +1,9 @@
 use anyhow::bail;
 use log::{debug, info};
-use sha2::Digest;
-use std::io::Seek;
 
 mod revi_version;
 mod logger;
+mod hasher;
 
 
 #[tokio::main]
@@ -22,57 +21,59 @@ async fn main() -> anyhow::Result<()> {
 
     debug!("Running in DEBUG mode..");
 
-    // Get the path to the ISO
-    let path = std::env::args().nth(1).unwrap();
-
-    // Opening a file handle to the file
-    let mut file = std::fs::File::open(path)?;
-
-    // Creating a SHA256 and MD5 hasher
-    let mut sha256_hasher = sha2::Sha256::new();
-    let mut md5_hasher = md5::Md5::new();
-
-    info!("Computing SHA256 hash, please wait...");
-    // Copying the file contents to the hasher
-    std::io::copy(&mut file, &mut sha256_hasher)?;
-    let sha256_hash = format!("{:X}", sha256_hasher.finalize());
-    info!("SHA-256: {}", sha256_hash);
-
-    info!("Computing MD5 hash, please wait...");
-    file.seek(std::io::SeekFrom::Start(0))?;
-    // Copying the file contents to the hasher
-    std::io::copy(&mut file, &mut md5_hasher)?;
-    let md5_hash = format!("{:X}", md5_hasher.finalize());
-    info!("MD5: {}", md5_hash);
-
     // Fetching hashes from Rest API
     info!("Retrieving official ReviOS hashes...");
     let official_hashes = revi_version::get_revi_hashes().await?;
 
-    // Using the find method to find a matching MD5 / SHA256 hash
-    info!("Comparing hashes...");
-    let found_version = official_hashes
-        .iter()
-        .find(|entry| entry.sha256 == sha256_hash || entry.md5 == md5_hash);
+    // Iterating over all provided files
+    for path in std::env::args().skip(1) {
 
-    info!("========================= \x1b[38;5;113mRESULT\x1b[0m =========================");
+        // Opening the file in read-only mode
+        let mut file = std::fs::File::open(&path)?;
 
-    if found_version.is_none() {
-        info!("\x1b[38;5;203mUnable to find a matching SHA256 / MD5 hash!\x1b[0m");
-        info!("Either the ISO is corrupted or not an official ReviOS ISO!");
-        info!("If you obtained the ISO from an unofficial source, please download it from our official website.");
-        info!("However, If the error messages still occurs, please re-download the ISO");
-        info!("because it got corrupted due to unstable connection, servers, etc.");
-    } else {
-        let version = found_version.unwrap();
-        info!("\x1b[38;5;113mYour SHA256 / MD5 hash matches with the official ReviOS ISO:\x1b[0m");
-        info!("Name:   {}", version.name);
-        info!("SHA256: {}", version.sha256);
-        info!("MD5:    {}", version.md5);
+        // Computing SHA-256 hash
+        let sha256_hash = hasher::compute_sha256(&mut file).await?;
+        info!("SHA-256: {}", sha256_hash);
+
+        // Computing MD5 hash
+        let md5_hash = hasher::compute_md5(&mut file).await?;
+        info!("MD5: {}", md5_hash);
+
+
+        // Looking for a matching hash using the find method
+        info!("Comparing hashes...");
+        let matching_hash = official_hashes
+            .iter()
+            .find(|entry| entry.sha256 == sha256_hash || entry.md5 == md5_hash);
+
+        info!("========================= \x1b[38;5;113mRESULT\x1b[0m =========================");
+
+        let file_name = std::path::Path::new(&path)
+            .file_name()
+            .expect("Failed to get file name")
+            .to_str()
+            .expect("Failed to convert file name to string");
+
+        match matching_hash {
+            Some(version) => {
+                info!("\x1b[38;5;113mSHA-256 / MD5 hash of \"{}\" matches with the official ReviOS ISO:\x1b[0m", file_name);
+                info!("Name:   {}", version.name);
+                info!("SHA256: {}", version.sha256);
+                info!("MD5:    {}", version.md5);
+            },
+            None => {
+                info!("\x1b[38;5;203mUnable to find a matching SHA256 / MD5 hash for \"{}\"!\x1b[0m", file_name);
+                info!("Either the ISO is corrupted or not an official ReviOS ISO!");
+                info!("If you obtained the ISO from an unofficial source, please download it from our official website.");
+                info!("However, If the error messages still occurs, please re-download the ISO");
+                info!("because it got corrupted due to unstable connection, servers, etc.");
+            }
+        }
+
+        info!("==========================================================");
     }
 
-    info!("==========================================================");
-
+    // if the binary was compiled for Windows, we need to wait for the user to press a key to not automatically close the terminal
     #[cfg(target_os = "windows")]
     {
         info!("\x1b[38;5;113mConfirmation has ended. Press any key to quit the tool\x1b[0m");
