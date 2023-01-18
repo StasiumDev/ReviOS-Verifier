@@ -13,9 +13,7 @@ jobs:
       matrix:
         include:
           - target: x86_64-pc-windows-gnu
-            asset_name: ReviOS-Verifier.exe
           - target: x86_64-unknown-linux-musl
-            asset_name: ReviOS-Verifier
     steps:
       - uses: actions/checkout@master
       - name: Compile and release
@@ -24,4 +22,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           RUSTTARGET: ${{ matrix.target }}
-          asset_name: ${{ matrix.asset_name }}
