@@ -4,10 +4,14 @@ pub fn init() {
     let mut builder = env_logger::Builder::new();
     builder.filter_level(log::LevelFilter::Off);
 
-    #[cfg(debug_assertions)]
-    builder.filter_module("revi_verifier", log::LevelFilter::Debug);
-    #[cfg(not(debug_assertions))]
-    builder.filter_module("revi_verifier", log::LevelFilter::Info);
+    builder.filter_module(
+        "revi_verifier",
+        if cfg!(debug_assertions) {
+            log::LevelFilter::Debug
+        } else {
+            log::LevelFilter::Info
+        },
+    );
 
     builder.format(|buf, record| {
         let style = buf.style();
@@ -29,3 +33,4 @@ pub fn init() {
 
     builder.init();
 }
+

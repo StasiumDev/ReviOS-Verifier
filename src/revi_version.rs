@@ -18,6 +18,5 @@ pub async fn get_revi_hashes() -> anyhow::Result<Vec<ReviVersion>> {
     }
 
     let json_raw = response.text().await?;
-    let versions: Vec<ReviVersion> = serde_json::from_str(&json_raw)?;
-    Ok(versions)
+    Ok(serde_json::from_str(&json_raw)?)
 }

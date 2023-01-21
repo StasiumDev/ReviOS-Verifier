@@ -1,10 +1,9 @@
 use anyhow::bail;
 use log::{debug, info};
 
-mod revi_version;
-mod logger;
 mod hasher;
-
+mod logger;
+mod revi_version;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -16,7 +15,7 @@ async fn main() -> anyhow::Result<()> {
     logger::init();
 
     // Printing the ASCII art
-    const ASCII: &str  = include_str!("../ascii.txt");
+    const ASCII: &str = include_str!("../ascii.txt");
     println!("\n\x1b[38;5;203m{}\x1b[0m\n", ASCII);
 
     debug!("Running in DEBUG mode..");
@@ -38,7 +37,6 @@ async fn main() -> anyhow::Result<()> {
         let md5_hash = hasher::compute_md5(&mut file).await?;
         info!("MD5: {}", md5_hash);
 
-
         // Looking for a matching hash using the find method
         info!("Comparing hashes...");
         let matching_hash = official_hashes
@@ -59,9 +57,12 @@ async fn main() -> anyhow::Result<()> {
                 info!("Name:   {}", version.name);
                 info!("SHA256: {}", version.sha256);
                 info!("MD5:    {}", version.md5);
-            },
+            }
             None => {
-                info!("\x1b[38;5;203mUnable to find a matching SHA256 / MD5 hash for \"{}\"!\x1b[0m", file_name);
+                info!(
+                    "\x1b[38;5;203mUnable to find a matching SHA256 / MD5 hash for \"{}\"!\x1b[0m",
+                    file_name
+                );
                 info!("Either the ISO is corrupted or not an official ReviOS ISO!");
                 info!("If you obtained the ISO from an unofficial source, please download it from our official website.");
                 info!("However, If the error messages still occurs, please re-download the ISO");
@@ -73,8 +74,7 @@ async fn main() -> anyhow::Result<()> {
     }
 
     // if the binary was compiled for Windows, we need to wait for the user to press a key to not automatically close the terminal
-    #[cfg(target_os = "windows")]
-    {
+    if cfg!(target_os = "windows") {
         info!("\x1b[38;5;113mConfirmation has ended. Press any key to quit the tool\x1b[0m");
         std::io::stdin().read_line(&mut String::new()).unwrap();
     }
