@@ -1,27 +1,33 @@
 use sha2::Digest;
-use log::info;
-use std::io::Seek;
+use std::io::{Read, Seek, Write};
 
-pub async fn compute_md5(file: &mut std::fs::File) -> anyhow::Result<String> {
-    info!("Computing MD5 hash, please wait...");
+const SIZE: usize = 0xFFFF;
 
-    // Creating MD5 hasher
-    let mut hasher = md5::Md5::new();
+pub fn compute_hash<D: Digest + Write>(file: &mut std::fs::File) -> anyhow::Result<String> {
+    // Seeking to the beginning of the file
     file.seek(std::io::SeekFrom::Start(0))?;
 
-    // Copying the file contents to the hasher
-    std::io::copy(file, &mut hasher)?;
-    Ok(format!("{:X}", hasher.finalize()))
-}
+    // Creating Hasher
+    let mut hasher = D::new();
+    let mut file_data = vec![0; SIZE];
 
-pub async fn compute_sha256(file: &mut std::fs::File) -> anyhow::Result<String> {
-    info!("Computing SHA-256 hash, please wait...");
+    // Reading the file in chunks of 64KB
+    #[allow(unused_assignments)]
+    let mut bytes_read = 0;
+    loop {
+        bytes_read = file.read(&mut file_data)?;
+        if bytes_read == SIZE {
+            hasher.update(&file_data);
+        } else {
+            hasher.update(&file_data[0..bytes_read]);
+            break;
+        }
+    }
 
-    // Creating SHA-256 hasher
-    let mut hasher = sha2::Sha256::new();
-    file.seek(std::io::SeekFrom::Start(0))?;
+    let hash = hasher.finalize();
+    let sz = <D as Digest>::output_size();
+    let mut ret = vec![0; sz];
+    ret.copy_from_slice(&hash);
 
-    // Copying the file contents to the hasher
-    std::io::copy(file, &mut hasher)?;
-    Ok(format!("{:X}", hasher.finalize()))
+    Ok(ret.iter().map(|byte| format!("{:02X}", byte)).collect())
 }

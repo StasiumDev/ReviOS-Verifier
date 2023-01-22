@@ -18,23 +18,30 @@ async fn main() -> anyhow::Result<()> {
     const ASCII: &str = include_str!("../ascii.txt");
     println!("\n\x1b[38;5;203m{}\x1b[0m\n", ASCII);
 
+    // Printing the version info
+    info!("Version: v1.2.0");
+    info!("Author:  Stasium#0001");
+    info!("GitHub:  https://github.com/StasiumDev");
+
     debug!("Running in DEBUG mode..");
 
     // Fetching hashes from Rest API
     info!("Retrieving official ReviOS hashes...");
     let official_hashes = revi_version::get_revi_hashes().await?;
+    info!("Retrieved {} hashes!", official_hashes.len());
 
     // Iterating over all provided files
     for path in std::env::args().skip(1) {
         // Opening the file in read-only mode
         let mut file = std::fs::File::open(&path)?;
 
-        // Computing SHA-256 hash
-        let sha256_hash = hasher::compute_sha256(&mut file).await?;
+        info!("Computing SHA-256 hash, please wait...");
+        let sha256_hash = hasher::compute_hash::<sha2::Sha256>(&mut file)?;
         info!("SHA-256: {}", sha256_hash);
 
         // Computing MD5 hash
-        let md5_hash = hasher::compute_md5(&mut file).await?;
+        info!("Computing MD5 hash, please wait...");
+        let md5_hash = hasher::compute_hash::<md5::Md5>(&mut file)?;
         info!("MD5: {}", md5_hash);
 
         // Looking for a matching hash using the find method

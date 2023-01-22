@@ -1,10 +1,10 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ReviVersion {
     pub name: String,
     pub md5: String,
-    pub sha256: String
+    pub sha256: String,
 }
 
 pub async fn get_revi_hashes() -> anyhow::Result<Vec<ReviVersion>> {
