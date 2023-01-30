@@ -14,7 +14,7 @@ chrono = "0.4.23"
 env_logger = "0.10.0"
 log = "0.4.17"
 md-5 = "0.10.5"
-reqwest = "0.11.13"
+reqwest = { version = "0.11.13", features = ["rustls", "rustls-tls"] }
 sha2 = { version = "0.10.6", features = ["compress"] }
 version-compare = "0.1.1"
 
