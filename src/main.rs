@@ -4,6 +4,9 @@ use log::{debug, info};
 mod hasher;
 mod logger;
 mod revi_version;
+mod update_checker;
+
+const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -19,9 +22,12 @@ async fn main() -> anyhow::Result<()> {
     println!("\n\x1b[38;5;203m{}\x1b[0m\n", ASCII);
 
     // Printing the version info
-    info!("Version: v1.2.0");
+    info!("Version: v{}", VERSION);
     info!("Author:  Stasium#0001");
     info!("GitHub:  https://github.com/StasiumDev");
+
+    // Checking for updates
+    update_checker::check_for_update().await?;
 
     debug!("Running in DEBUG mode..");
 

@@ -1,6 +1,6 @@
 [package]
 name = "revi_verifier"
-version = "1.2.0"
+version = "1.3.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -16,6 +16,7 @@ log = "0.4.17"
 md-5 = "0.10.5"
 reqwest = "0.11.13"
 sha2 = { version = "0.10.6", features = ["compress"] }
+version-compare = "0.1.1"
 
 [profile.release]
 lto = true
