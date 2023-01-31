@@ -1,10 +1,12 @@
 use anyhow::bail;
 use log::{debug, info};
 
-mod hasher;
+use crate::models::revi_version;
+use crate::utils::{hasher, update_checker};
+
 mod logger;
-mod revi_version;
-mod update_checker;
+mod models;
+mod utils;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
