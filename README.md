@@ -24,4 +24,5 @@ If your verification is unsuccessful, the tool will provide you with information
 
 
 **Backstory why this Tool was made:**
->Due to some users having issues to use the built-in command, I came up with this Tool. Not only is it much easier for the user to use, it also gets rid of the need to manually compare the hashes on the website.
+> Due to some users having issues to use the built-in command, I came up with this Tool.
+> Not only is it much easier for the user to use, it also gets rid of the need to manually compare the hashes on the website.

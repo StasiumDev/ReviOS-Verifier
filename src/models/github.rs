@@ -20,7 +20,8 @@ pub struct GithubResponse {
     pub tarball_url: String,
     pub zipball_url: String,
     pub body: String,
-    pub mentions_count: i64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub mentions_count: Option<i64>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
