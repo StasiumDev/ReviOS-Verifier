@@ -42,6 +42,7 @@ pub async fn check_for_update() -> anyhow::Result<()> {
                 "========================= \x1b[38;5;113mUPDATE\x1b[0m ========================="
             );
             info!("\x1b[38;5;229mA new version is available!\x1b[0m");
+            info!("It is highly recommended to update to ensure the full functionality!");
             info!("Download: https://github.com/StasiumDev/ReviOS-Verifier/releases");
             info!("==========================================================");
         }

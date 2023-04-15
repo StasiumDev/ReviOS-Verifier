@@ -1,0 +1,19 @@
+name: Rust CI
+on:
+  pull_request:
+    branches: [ "master", "dev" ]
+    types: [ "opened", "synchronize", "reopened", "ready_for_review" ]
+jobs:
+  build:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust: [ stable, nightly ]
+    steps:
+      - uses: actions/checkout@master
+      - name "Setting up Rust toolchain"
+      - uses: rust-build/rust-build.action@v1.4.3
+      - name: "Compiling and testing"
+        run: cargo run --release
+        run: cargo test --release

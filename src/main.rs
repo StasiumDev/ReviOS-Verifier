@@ -12,12 +12,27 @@ const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    if std::env::args().len() < 2 {
-        bail!("Please provide the path to the ISO file as an argument!");
-    }
-
     // Initialize the logger
     logger::init();
+
+    match run_verifier().await {
+        Ok(_) => {}
+        Err(err) => {
+            log::error!("{}", err);
+            if cfg!(target_os = "windows") {
+                log::info!("\x1b[38;5;113mPress enter to quit the tool\x1b[0m");
+                std::io::stdin().read_line(&mut String::new()).unwrap();
+            }
+        }
+    }
+
+    Ok(())
+}
+
+async fn run_verifier() -> anyhow::Result<()> {
+    if std::env::args().len() < 2 {
+        bail!("Please provide at least one file to verify!");
+    }
 
     // Printing the ASCII art
     const ASCII: &str = include_str!("../ascii.txt");
@@ -27,11 +42,10 @@ async fn main() -> anyhow::Result<()> {
     info!("Version: v{}", VERSION);
     info!("Author:  Stasium#0001");
     info!("GitHub:  https://github.com/StasiumDev");
+    debug!("Running in DEBUG mode..");
 
     // Checking for updates
     update_checker::check_for_update().await?;
-
-    debug!("Running in DEBUG mode..");
 
     // Fetching hashes from Rest API
     info!("Retrieving official ReviOS hashes...");
