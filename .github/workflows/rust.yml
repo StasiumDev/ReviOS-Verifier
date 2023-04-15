@@ -15,5 +15,5 @@ jobs:
       - name: "Setting up Rust toolchain"
       - uses: rust-build/rust-build.action@v1.4.3
       - name: "Compiling and testing"
-        run: cargo check
-        run: cargo test
+      - run: cargo check
+      - run: cargo test
