@@ -2,7 +2,7 @@ name: Rust CI
 on:
   pull_request:
     branches: [ "master", "dev" ]
-    types: [ "opened", "synchronize", "reopened", "ready_for_review" ]
+    types: [ opened, synchronize, reopened, ready_for_review ]
 jobs:
   build:
     if: github.event.pull_request.draft == false

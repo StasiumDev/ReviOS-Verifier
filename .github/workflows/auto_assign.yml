@@ -1,8 +1,8 @@
 name: "auto assign"
 on:
     pull_request_target:
-        branches: ["dev"]
-        types: [opened, ready_for_review]
+        branches: [ "master", "dev" ]
+        types: [ opened, ready_for_review ]
 jobs:
     auto-assign:
         name: auto-assign
