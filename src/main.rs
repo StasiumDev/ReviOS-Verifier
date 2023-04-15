@@ -90,7 +90,7 @@ async fn main() -> anyhow::Result<()> {
 
     // if the binary was compiled for Windows, we need to wait for the user to press a key to not automatically close the terminal
     if cfg!(target_os = "windows") {
-        info!("\x1b[38;5;113mConfirmation has ended. Press any key to quit the tool\x1b[0m");
+        info!("\x1b[38;5;113mConfirmation has ended. Press enter to quit the tool\x1b[0m");
         std::io::stdin().read_line(&mut String::new()).unwrap();
     }
 
