@@ -12,7 +12,7 @@ jobs:
         rust: [ stable, nightly ]
     steps:
       - uses: actions/checkout@master
-      - name "Setting up Rust toolchain"
+      - name: "Setting up Rust toolchain"
       - uses: rust-build/rust-build.action@v1.4.3
       - name: "Compiling and testing"
         run: cargo check
