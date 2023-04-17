@@ -16,14 +16,18 @@ async fn main() -> anyhow::Result<()> {
     logger::init();
 
     match run_verifier().await {
-        Ok(_) => {}
+        Ok(_) => {
+            info!("\x1b[38;5;113mConfirmation has ended.\x1b[0m");
+        }
         Err(err) => {
             log::error!("{}", err);
-            if cfg!(target_os = "windows") {
-                log::info!("\x1b[38;5;113mPress enter to quit the tool\x1b[0m");
-                std::io::stdin().read_line(&mut String::new()).unwrap();
-            }
         }
+    }
+
+    // if the binary was compiled for Windows, we need to wait for the user to press enter to not automatically close the terminal
+    if cfg!(target_os = "windows") {
+        info!("Press enter to quit the tool!");
+        std::io::stdin().read_line(&mut String::new()).unwrap();
     }
 
     Ok(())
@@ -56,7 +60,6 @@ async fn run_verifier() -> anyhow::Result<()> {
     for path in std::env::args().skip(1) {
         // Opening the file in read-only mode
         let mut file = std::fs::File::open(&path)?;
-
         info!("Computing SHA-256 hash, please wait...");
         let sha256_hash = hasher::compute_hash::<sha2::Sha256>(&mut file)?;
         info!("SHA-256: {}", sha256_hash);
@@ -80,32 +83,20 @@ async fn run_verifier() -> anyhow::Result<()> {
             .to_str()
             .expect("Failed to convert file name to string");
 
-        match matching_hash {
-            Some(version) => {
-                info!("\x1b[38;5;113mSHA-256 / MD5 hash of \"{}\" matches with the official ReviOS ISO:\x1b[0m", file_name);
-                info!("Name:   {}", version.name);
-                info!("SHA256: {}", version.sha256);
-                info!("MD5:    {}", version.md5);
-            }
-            None => {
-                info!(
-                    "\x1b[38;5;203mUnable to find a matching SHA256 / MD5 hash for \"{}\"!\x1b[0m",
-                    file_name
-                );
-                info!("Either the ISO is corrupted or not an official ReviOS ISO!");
-                info!("If you obtained the ISO from an unofficial source, please download it from our official website.");
-                info!("However, If the error messages still occurs, please re-download the ISO");
-                info!("because it got corrupted due to unstable connection, servers, etc.");
-            }
+        if let Some(version) = matching_hash {
+            info!("\x1b[38;5;113mSHA-256 / MD5 hash of \"{}\" matches with the official ReviOS ISO:\x1b[0m", file_name);
+            info!("Name:   {}", version.name);
+            info!("SHA256: {}", version.sha256);
+            info!("MD5:    {}", version.md5);
+        } else {
+            info!("\x1b[38;5;203mUnable to find a matching SHA256 / MD5 hash for \"{}\"!\x1b[0m", file_name);
+            info!("Either the ISO is corrupted or not an official ReviOS ISO!");
+            info!("If you obtained the ISO from an unofficial source, please download it from our official website.");
+            info!("However, If the error messages still occurs, please re-download the ISO");
+            info!("because it got corrupted due to unstable connection, servers, etc.");
         }
 
         info!("==========================================================");
-    }
-
-    // if the binary was compiled for Windows, we need to wait for the user to press a key to not automatically close the terminal
-    if cfg!(target_os = "windows") {
-        info!("\x1b[38;5;113mConfirmation has ended. Press enter to quit the tool\x1b[0m");
-        std::io::stdin().read_line(&mut String::new()).unwrap();
     }
 
     Ok(())
