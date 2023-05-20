@@ -34,10 +34,6 @@ async fn main() -> anyhow::Result<()> {
 }
 
 async fn run_verifier() -> anyhow::Result<()> {
-    if std::env::args().len() < 2 {
-        bail!("Please provide at least one file to verify!");
-    }
-
     // Printing the ASCII art
     const ASCII: &str = include_str!("../ascii.txt");
     println!("\n\x1b[38;5;203m{}\x1b[0m\n", ASCII);
@@ -51,13 +47,36 @@ async fn run_verifier() -> anyhow::Result<()> {
     // Checking for updates
     update_checker::check_for_update().await?;
 
+    // Getting the ISO files from the command line arguments
+    let mut iso_fies = std::env::args()
+        .skip(1)
+        .map(|arg| std::path::PathBuf::from(arg))
+        .collect::<Vec<_>>();
+
+    // If no ISO files were provided, open a file picker
+    if iso_fies.is_empty() {
+        info!("No iso files provided, opening file picker..");
+        let files = rfd::FileDialog::new()
+            .add_filter("ISO Files", &["iso"])
+            .pick_files();
+
+        if let Some(files) = files {
+            files.into_iter().for_each(|file| {
+                info!("Selected file: {:?}", file);
+                iso_fies.push(file);
+            });
+        } else {
+            bail!("No iso files provided!");
+        }
+    }
+
     // Fetching hashes from Rest API
     info!("Retrieving official ReviOS hashes...");
     let official_hashes = revi_version::get_revi_hashes().await?;
     info!("Retrieved {} hashes!", official_hashes.len());
 
     // Iterating over all provided files
-    for path in std::env::args().skip(1) {
+    for path in iso_fies {
         // Opening the file in read-only mode
         let mut file = std::fs::File::open(&path)?;
         info!("Computing SHA-256 hash, please wait...");
