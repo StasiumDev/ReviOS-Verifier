@@ -61,8 +61,8 @@ async fn run_verifier() -> anyhow::Result<()> {
             .pick_files();
 
         if let Some(files) = files {
+            info!("Selected {} file(s)!", files.len());
             files.into_iter().for_each(|file| {
-                info!("Selected file: {:?}", file);
                 iso_fies.push(file);
             });
         } else {
