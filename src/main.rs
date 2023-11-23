@@ -48,13 +48,13 @@ async fn run_verifier() -> anyhow::Result<()> {
     update_checker::check_for_update().await?;
 
     // Getting the ISO files from the command line arguments
-    let mut iso_fies = std::env::args()
+    let mut iso_files = std::env::args()
         .skip(1)
         .map(|arg| std::path::PathBuf::from(arg))
         .collect::<Vec<_>>();
 
     // If no ISO files were provided, open a file picker
-    if iso_fies.is_empty() {
+    if iso_files.is_empty() {
         info!("No iso files provided, opening file picker..");
         let files = rfd::FileDialog::new()
             .add_filter("ISO Files", &["iso"])
@@ -63,7 +63,7 @@ async fn run_verifier() -> anyhow::Result<()> {
         if let Some(files) = files {
             info!("Selected {} file(s)!", files.len());
             files.into_iter().for_each(|file| {
-                iso_fies.push(file);
+                iso_files.push(file);
             });
         } else {
             bail!("No iso files provided!");
@@ -76,7 +76,7 @@ async fn run_verifier() -> anyhow::Result<()> {
     info!("Retrieved {} hashes!", official_hashes.len());
 
     // Iterating over all provided files
-    for path in iso_fies {
+    for path in iso_files {
         // Opening the file in read-only mode
         let mut file = std::fs::File::open(&path)?;
         info!("Computing SHA-256 hash, please wait...");
