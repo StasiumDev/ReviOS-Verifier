@@ -8,15 +8,6 @@ pub struct ReviVersion {
 }
 
 pub async fn get_revi_hashes() -> anyhow::Result<Vec<ReviVersion>> {
-    let response = reqwest::Client::new()
-        .get("https://api.stasium.dev/v1/revios/hashes")
-        .send()
-        .await?;
-
-    if response.status() != reqwest::StatusCode::OK {
-        anyhow::bail!("Failed to fetch hashes from the API!");
-    }
-
-    let json_raw = response.text().await?;
-    Ok(serde_json::from_str(&json_raw)?)
+    let hashes = include_str!("../.././hashes.json");
+    Ok(serde_json::from_str(&hashes)?)
 }
