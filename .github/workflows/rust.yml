@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: "Setting up Rust toolchain"
-      - uses: rust-build/rust-build.action@v1.4.3
+      - uses: rust-build/rust-build.action@v1.4.5
       - name: "Compiling and testing"
       - run: cargo check
       - run: cargo test

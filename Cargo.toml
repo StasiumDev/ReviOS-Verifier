@@ -1,23 +1,23 @@
 [package]
 name = "revi_verifier"
-version = "1.6.0"
+version = "1.7.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tokio = { version = "1.24.1", features = ["macros", "rt-multi-thread"] }
-serde = { version = "1.0.152", features = ["derive"] }
-serde_json = "1.0.91"
-anyhow = "1.0.68"
-chrono = "0.4.23"
-env_logger = "0.10.0"
-log = "0.4.17"
-md-5 = "0.10.5"
-reqwest = "0.11.13"
-sha2 = { version = "0.10.6", features = ["compress"] }
-version-compare = "0.1.1"
-rfd = "0.11.4"
+tokio = { version = "1.40.0", features = ["macros", "rt-multi-thread"] }
+serde = { version = "1.0.210", features = ["derive"] }
+serde_json = "1.0.128"
+anyhow = "1.0.89"
+chrono = "0.4.38"
+env_logger = "0.11.5"
+log = "0.4.22"
+md-5 = "0.10.6"
+reqwest = "0.12.8"
+sha2 = { version = "0.10.8", features = ["compress"] }
+version-compare = "0.2.0"
+rfd = "0.15.0"
 
 [profile.release]
 lto = true
